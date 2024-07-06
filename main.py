@@ -1,27 +1,19 @@
 import streamlit as st
-import os
 from openai import OpenAI
 
 # Set your OpenAI API key here (ensure it's set in Replit secrets)
 openai_api_key = st.secrets['OPEN_API_KEY']
-os.environ["OPENAI_API_KEY"] = openai_api_key
-
-client = OpenAI()
+client = OpenAI(api_key=openai_api_key)
 
 def get_movie_recommendations(genre, movie_name, movie_length):
     prompt = f"Recommend a {genre} movie similar to {movie_name} that is around {movie_length} minutes long. Provide the movie name, introduction, main actors, duration, and genre."
 
-    chat_completion = client.chat.completions.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
+        messages=[{"role": "user", "content": prompt}],
     )
 
-    return chat_completion.choices[0].message.content.strip()
+    return             response.choices[0].message.content.strip()
 
 # Streamlit user interface
 st.title('Movie Recommendation AI')
